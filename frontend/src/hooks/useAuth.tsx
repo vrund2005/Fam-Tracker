@@ -50,14 +50,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (token) {
         await refreshUser();
       } else {
-        // If no token, check if database is empty to show bootstrap register
         try {
-          const usersList = await api.get('/api/users', { skipAuth: true });
-          if (usersList && usersList.length === 0) {
-            setIsFirstBoot(true);
-          }
+          const res = await api.get('/api/auth/first-boot', { skipAuth: true });
+          setIsFirstBoot(res.is_first_boot);
         } catch (err) {
-          // If we fail because of no credentials, that means it's not empty or needs auth
           setIsFirstBoot(false);
         }
       }

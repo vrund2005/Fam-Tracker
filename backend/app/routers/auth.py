@@ -19,6 +19,11 @@ from app.auth_utils import (
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
+@router.get("/first-boot")
+def check_first_boot(db: Session = Depends(get_db)):
+    total_users = db.query(User).count()
+    return {"is_first_boot": total_users == 0}
+
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
     # Check if this is the first user (bootstrap)
