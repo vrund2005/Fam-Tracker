@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@layer base {
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-card-dark {
+  background: rgba(21, 21, 21, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* CMYK Border Gradient Effect */
+.cmyk-border-cyan {
+  border-image: linear-gradient(to right, #00C2FF, transparent) 1;
+}
+
+.cmyk-border-magenta {
+  border-image: linear-gradient(to right, #FF2D95, transparent) 1;
+}
+
+.cmyk-border-yellow {
+  border-image: linear-gradient(to right, #FFD60A, transparent) 1;
+}
+
+/* CMYK Multi-Gradient Border */
+.cmyk-gradient-border {
+  position: relative;
+  border-radius: 1rem;
+  background: linear-gradient(to right, #00C2FF, #FF2D95, #FFD60A);
+  padding: 1px; /* Border thickness */
+}
+
+.cmyk-gradient-border-inner {
+  border-radius: 0.95rem;
+  height: 100%;
+  width: 100%;
+}
+
+.dark .cmyk-gradient-border-inner {
+  background: #111111;
+}
+
+.light .cmyk-gradient-border-inner {
+  background: #FFFFFF;
+}
+
+/* Custom Hide Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* CMYK Text Gradients */
+.text-gradient-cmy {
+  background: linear-gradient(135deg, #00C2FF 0%, #FF2D95 50%, #FFD60A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan-magenta {
+  background: linear-gradient(135deg, #00C2FF 0%, #FF2D95 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Animations */
+@keyframes pulse-cyan {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(0, 194, 255, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(0, 194, 255, 0.8);
+  }
+}
+
+.animate-pulse-cyan {
+  animation: pulse-cyan 3s infinite;
+}
+
+/* Bottom Safe Area Padding for iOS Safari */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
