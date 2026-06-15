@@ -186,17 +186,83 @@ export const AppLayout: React.FC = () => {
         </div>
       </aside>
 
+      {/* Mobile Drawer */}
+      {isSidebarOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
+          <div className="relative w-64 h-full glass-card-dark border-r border-cmyk-gray-800 flex flex-col animate-in slide-in-from-left duration-300 shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-6 border-b border-cmyk-gray-800">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cmyk-cyan to-cmyk-magenta flex items-center justify-center font-bold text-white shadow-cyan-glow">
+                  F
+                </div>
+                <h1 className="font-bold text-lg text-gradient-cyan-magenta">FamTracker</h1>
+              </div>
+              <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-cmyk-gray-400 hover:text-white">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto no-scrollbar">
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.path);
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${
+                      active
+                        ? 'bg-gradient-to-r from-cmyk-cyan/20 to-cmyk-magenta/10 text-cmyk-cyan border-l-4 border-cmyk-cyan shadow-cyan-glow'
+                        : 'text-cmyk-gray-400 hover:text-cmyk-gray-100 hover:bg-cmyk-gray-800/40'
+                    }`}
+                  >
+                    <Icon size={20} className={active ? 'text-cmyk-cyan' : ''} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+            
+            <div className="p-4 border-t border-cmyk-gray-800 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <img
+                  src={user?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
+                  alt="Avatar"
+                  className="w-10 h-10 rounded-full border border-cmyk-cyan/50 object-cover"
+                />
+                <div className="max-w-[120px] truncate">
+                  <p className="font-semibold text-sm truncate">{user?.name}</p>
+                  <p className="text-xs text-cmyk-gray-500 capitalize">{user?.role}</p>
+                </div>
+              </div>
+              <button
+                onClick={logout}
+                className="p-2 text-cmyk-gray-400 hover:text-cmyk-magenta rounded-lg hover:bg-cmyk-gray-900 transition-colors"
+                title="Log Out"
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 2. MAIN APP SHELL */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden relative">
         
         {/* Top Header */}
-        <header className="flex items-center justify-between px-6 py-4 glass-panel border-b border-cmyk-gray-800/30 md:border-b-0 shrink-0 z-10">
+        <header className="flex items-center justify-between px-4 md:px-6 py-4 glass-panel border-b border-cmyk-gray-800/30 md:border-b-0 shrink-0 z-10">
           {/* Mobile hamburger & title */}
-          <div className="flex items-center gap-3 md:hidden">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cmyk-cyan to-cmyk-magenta flex items-center justify-center font-bold text-white">
+          <div className="flex items-center gap-2 md:hidden">
+            <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-cmyk-gray-400 hover:text-cmyk-cyan">
+              <Menu size={24} />
+            </button>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cmyk-cyan to-cmyk-magenta flex items-center justify-center font-bold text-white shrink-0">
               F
             </div>
-            <h1 className="font-bold text-lg text-gradient-cyan-magenta">FamTracker</h1>
+            <h1 className="font-bold text-lg text-gradient-cyan-magenta truncate hidden sm:block">FamTracker</h1>
           </div>
 
           <div className="hidden md:block">
@@ -206,7 +272,7 @@ export const AppLayout: React.FC = () => {
           </div>
 
           {/* Right Header Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             
             {/* Theme Toggle */}
             <button
@@ -235,7 +301,7 @@ export const AppLayout: React.FC = () => {
               {showNotifications && (
                 <>
                   <div className="fixed inset-0 z-20" onClick={() => setShowNotifications(false)} />
-                  <div className="absolute right-0 mt-3 w-80 glass-card-dark rounded-2xl shadow-glass-dark border border-cmyk-gray-800 z-30 py-3 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="absolute right-0 md:right-0 -right-10 mt-3 w-80 glass-card-dark rounded-2xl shadow-glass-dark border border-cmyk-gray-800 z-30 py-3 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="flex items-center justify-between px-4 pb-2 border-b border-cmyk-gray-800">
                       <h4 className="font-bold text-sm">Notifications</h4>
                       {unreadCount > 0 && (
@@ -290,57 +356,63 @@ export const AppLayout: React.FC = () => {
         </header>
 
         {/* Scrollable Content Pane */}
-        <main className="flex-1 overflow-y-auto px-6 py-6 md:py-8 pb-24 md:pb-8 bg-cmyk-gray-950 dark:bg-cmyk-darkBg light:bg-cmyk-gray-50">
+        <main className="flex-1 overflow-y-auto px-4 md:px-6 py-6 pb-24 md:pb-8 bg-cmyk-gray-950 dark:bg-cmyk-darkBg light:bg-cmyk-gray-50 w-full overflow-x-hidden">
           <Outlet />
         </main>
         
         {/* 3. MOBILE BOTTOM NAV BAR */}
-        <nav className="fixed bottom-0 left-0 right-0 h-16 md:hidden glass-panel border-t border-cmyk-gray-800/40 bg-cmyk-gray-950/80 dark:bg-cmyk-black/90 light:bg-white/95 flex items-center justify-around z-20 safe-bottom">
-          {navigationItems.filter(item => !item.isQuickAdd).slice(0, 4).map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            return (
-              <Link
-                key={item.label}
-                to={item.path}
-                className={`flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
-                  active ? 'text-cmyk-cyan scale-105' : 'text-cmyk-gray-500 hover:text-cmyk-gray-200'
-                }`}
-              >
-                <Icon size={20} className={active ? 'drop-shadow-cyan-glow' : ''} />
-                <span className="text-[10px] mt-0.5 font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
+        <nav className="fixed bottom-0 left-0 right-0 h-16 md:hidden glass-panel border-t border-cmyk-gray-800/40 bg-cmyk-gray-950/90 dark:bg-cmyk-black/95 light:bg-white/95 flex items-center justify-between px-2 z-20 safe-bottom">
           
+          <Link
+            to="/"
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
+              isActive('/') ? 'text-cmyk-cyan' : 'text-cmyk-gray-500 hover:text-cmyk-gray-200'
+            }`}
+          >
+            <LayoutDashboard size={20} className={isActive('/') ? 'drop-shadow-cyan-glow' : ''} />
+            <span className="text-[10px] mt-1 font-medium">Home</span>
+          </Link>
+
+          <Link
+            to="/transactions"
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
+              isActive('/transactions') ? 'text-cmyk-cyan' : 'text-cmyk-gray-500 hover:text-cmyk-gray-200'
+            }`}
+          >
+            <History size={20} className={isActive('/transactions') ? 'drop-shadow-cyan-glow' : ''} />
+            <span className="text-[10px] mt-1 font-medium">History</span>
+          </Link>
+
           {/* Central Mobile Floating Quick Action Button */}
-          <div className="relative -top-3">
+          <div className="relative -top-5 flex-1 flex justify-center">
             <button
               onClick={() => navigate('/add-expense')}
-              className="w-14 h-14 rounded-full bg-gradient-to-tr from-cmyk-cyan via-cmyk-magenta to-cmyk-yellow p-1 flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+              className="w-14 h-14 rounded-full bg-gradient-to-tr from-cmyk-cyan via-cmyk-magenta to-cmyk-yellow p-1 flex items-center justify-center shadow-lg active:scale-95 transition-transform shrink-0"
             >
               <div className="w-full h-full rounded-full bg-cmyk-black flex items-center justify-center text-white">
-                <PlusCircle size={24} className="text-cmyk-cyan" />
+                <PlusCircle size={24} className="text-cmyk-cyan drop-shadow-cyan-glow" />
               </div>
             </button>
           </div>
 
-          {navigationItems.filter(item => !item.isQuickAdd).slice(4, 7).map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            return (
-              <Link
-                key={item.label}
-                to={item.path}
-                className={`flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all duration-300 ${
-                  active ? 'text-cmyk-cyan scale-105' : 'text-cmyk-gray-500 hover:text-cmyk-gray-200'
-                }`}
-              >
-                <Icon size={20} className={active ? 'drop-shadow-cyan-glow' : ''} />
-                <span className="text-[10px] mt-0.5 font-medium">{item.label}</span>
-              </Link>
-            );
-          })}
+          <Link
+            to="/budgets"
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
+              isActive('/budgets') ? 'text-cmyk-cyan' : 'text-cmyk-gray-500 hover:text-cmyk-gray-200'
+            }`}
+          >
+            <PiggyBank size={20} className={isActive('/budgets') ? 'drop-shadow-cyan-glow' : ''} />
+            <span className="text-[10px] mt-1 font-medium">Budgets</span>
+          </Link>
+
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 text-cmyk-gray-500 hover:text-cmyk-gray-200"
+          >
+            <Menu size={20} />
+            <span className="text-[10px] mt-1 font-medium">Menu</span>
+          </button>
+          
         </nav>
 
       </div>
