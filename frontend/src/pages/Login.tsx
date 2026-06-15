@@ -182,7 +182,7 @@ export const Login: React.FC = () => {
         </form>
 
         {/* Quick Accounts list (Only visible if not first setup and not custom registering) */}
-        {!isFirstBoot && !isRegistering && (
+        {/* {!isFirstBoot && !isRegistering && (
           <div className="mt-8 border-t border-cmyk-gray-800 pt-6">
             <h4 className="text-center text-xs font-semibold text-cmyk-gray-500 mb-4 uppercase tracking-wider">
               Quick Accounts Selector
@@ -235,7 +235,7 @@ export const Login: React.FC = () => {
               Password for all seeded accounts is <code className="text-cmyk-cyan">password123</code>
             </p>
           </div>
-        )}
+        )*/}
         
       </div>
     </div>
